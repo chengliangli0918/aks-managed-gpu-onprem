@@ -224,8 +224,8 @@ You should see the default Nginx welcome page.
 Clean up when done:
 
 ```bash
-kubectl delete deployment nginx-onprem
-kubectl delete service nginx-onprem
+kubectl delete deployment nginx
+kubectl delete service nginx
 ```
 
 ## Running real AI inference/fine-tuning workloads
