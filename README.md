@@ -197,50 +197,10 @@ To confirm the on-prem node can actually run workloads and receive traffic
 from the cluster's Service networking, deploy a sample Nginx pod pinned to it
 with `nodeSelector`, and expose it via a `LoadBalancer` Service:
 
-```bash
-NODE_NAME=my-gpu-on-prem   # replace with your on-prem node's name
-
-cat <<EOF | kubectl apply -f -
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-onprem
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: nginx-onprem
-  template:
-    metadata:
-      labels:
-        app: nginx-onprem
-    spec:
-      nodeSelector:
-        kubernetes.io/hostname: ${NODE_NAME}
-      containers:
-      - name: nginx
-        image: nginx:latest
-        ports:
-        - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-onprem
-spec:
-  type: LoadBalancer
-  selector:
-    app: nginx-onprem
-  ports:
-  - port: 80
-    targetPort: 80
-EOF
-```
-
 Wait for the Service to get an external IP, then verify:
 
 ```bash
-kubectl get svc nginx-onprem --watch   # Ctrl-C once EXTERNAL-IP is assigned
+kubectl get svc nginx --watch   # Ctrl-C once EXTERNAL-IP is assigned
 curl http://<EXTERNAL-IP>
 ```
 
