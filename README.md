@@ -169,11 +169,11 @@ bash cloud/assign-permissions-to-act-as-node.sh \
 ### Keeping the node's internal IP in sync
 
 Because the on-prem node's VPN-assigned IP (on `tun0`) can change across
-reconnects/reboots, run `cloud/update-node-ip.sh` on the node to keep
+reconnects/reboots, run `onprem/update-node-ip.sh` on the node to keep
 kubelet's advertised `--node-ip` in sync with the current tunnel address:
 
 ```bash
-sudo bash cloud/update-node-ip.sh [-v <network interface>]  # default: tun0
+sudo bash onprem/update-node-ip.sh [-v <network interface>]  # default: tun0
 ```
 
 Consider running this periodically (e.g. via cron or a systemd timer) if the
