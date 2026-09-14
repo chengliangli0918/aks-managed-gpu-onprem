@@ -1,8 +1,10 @@
-# aks-managed-onprem GPU machines
+# aks managed onprem gpu machines
 
 Scripts to join an on-premises (or otherwise external) GPU machine as a worker
 node in an AKS-managed Kubernetes cluster, connected back to Azure over a
-point-to-site (P2S) VPN.
+point-to-site (P2S) VPN. While framed around GPU machines, nothing here is
+GPU-specific — the same approach works for joining any arbitrary machine
+(on-prem, another cloud, a lab box, etc.) as a worker node.
 
 The high-level idea:
 
