@@ -233,37 +233,6 @@ the on-prem node. If you want to run real AI inference/fine-tuning workloads
 on the on-prem GPU nodes, you can deploy the KubeRay operator using the guide
 in [chengliangli0918/aks-ray](https://github.com/chengliangli0918/aks-ray).
 
-## Troubleshooting
-
-- **`az login` blocked by Conditional Access (error 53003)**: this is an
-  organizational policy, not something these scripts control. Try connecting
-  from your corporate VPN/managed network, or enroll the machine in
-  Intune/Entra device management (Ubuntu 24.04+ and RHEL 9/10 are supported
-  via the [Microsoft Intune app for Linux](https://learn.microsoft.com/intune/user-help/company-portal/intune-app-linux)).
-- **`cilium-envoy` (or any pod) stuck in `CrashLoopBackOff` with `exec format
-  error` or `input/output error` on the on-prem node**: this usually means a
-  corrupted/partial image pull got cached in containerd's content store on
-  that node. Removing just the image name (`ctr images rm`) is not enough —
-  containerd deduplicates by content digest, so you also need to remove the
-  underlying content blobs and any leftover snapshot before forcing a fresh
-  pull:
-  ```bash
-  # on the affected node
-  ctr -n k8s.io images rm <image-ref>
-  ctr -n k8s.io content rm <digest>   # for the manifest, config, and each layer digest
-  ctr -n k8s.io snapshot rm <snapshot-id>
-  kubectl delete pod -n <namespace> <crashing-pod-name>
-  ```
-  If the node's kubelet itself is unstable (crash-looping, `kubectl exec`
-  timing out with `504 Gateway Timeout`), check for filesystem corruption
-  from an unclean shutdown (`journalctl -k | grep -i error`), and consider
-  `sudo touch /forcefsck && sudo reboot` before retrying.
-- **SSH to the on-prem node's VPN address times out**: that address (e.g.
-  `172.17.51.147`) is only reachable from machines actually connected to the
-  point-to-site VPN. Connect from a machine with the OpenVPN client active
-  (using `vpnconfig.ovpn`), or use the on-prem machine's local console
-  directly.
-
 ## License
 
 [MIT](LICENSE)
